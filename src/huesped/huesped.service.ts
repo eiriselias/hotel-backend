@@ -22,12 +22,20 @@ export class HuespedService {
   }
 
   async findAll() {
-    return await this.prisma.huesped.findMany();
+    return await this.prisma.huesped.findMany({
+      include:{
+        productos:true,
+        habitacionResponsable: true
+      }
+    });
   }
 
   async findOne(id: string) {
     
-      const huesped = await this.prisma.huesped.findUnique({where:{id}});
+      const huesped = await this.prisma.huesped.findUnique({where:{id}, include:{
+        productos:true,
+        habitacionResponsable: true
+      }});
       if(!huesped) throw new NotFoundException(`el huesped con ID ${id} no fue encontrado`)
       return huesped
     
