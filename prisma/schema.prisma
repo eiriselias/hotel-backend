@@ -5,11 +5,15 @@
 
 generator client {
   provider = "prisma-client-js"
+  
 }
 
 datasource db {
   provider = "postgresql"
+  url = env("DATABASE_URL")
 }
+
+//---------------------------- HUESPED ----------------------
 
 model Huesped {
   id        String   @id @default(uuid())
@@ -17,4 +21,59 @@ model Huesped {
   apellidos  String
   numeroDocumento Int
   fechaNacimiento DateTime?
+  ingreso DateTime?
+  salida DateTime?
+
+  productos Producto[] @relation("productos")
+
+  habitacionResponsableId String?
+  habitacionResponsable Habitacion? @relation("responsable", fields: [habitacionResponsableId], references: [id] )
+
+  acompananteId String?
+  acompanante Habitacion? @relation("acompanantes", fields: [acompananteId], references: [id])
+
+}
+
+//---------------------------- HABITACION -------------------
+
+enum Tipo {
+  Junior
+  Presidencial
+  Junior_decorada
+  Presidencial_decorada
+}
+
+model Habitacion {
+  id String @id @default(uuid())
+  numeroHabitacion Int @unique
+  capacidad Int
+  tipo Tipo
+  precio Int
+  ocupado Boolean
+  jacuzzi Boolean
+  aireAcondicionado Boolean
+
+  huespedResponsable Huesped[] @relation("responsable")
+  acompanantes Huesped[] @relation("acompanantes")
+}
+
+//---------------------------- PRODUCTO ---------------------
+
+enum Categoria {
+  Bebidas
+  Comidas
+  Sexual
+}
+
+model Producto {
+  id String @id @default(uuid())
+  nombreProducto String
+  descripcionProducto String
+  categoria Categoria
+  precio Int
+  existencia Int
+  cantidadSolicitada Int?
+
+  huespedId String?
+  huesped Huesped? @relation("productos", fields: [huespedId], references: [id])
 }

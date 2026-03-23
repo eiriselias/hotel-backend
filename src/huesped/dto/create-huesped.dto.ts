@@ -1,16 +1,32 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { IsString, IsNumber, IsOptional, IsDateString, IsUUID } from "class-validator";
 
 export class CreateHuespedDto {
 
-    @ApiProperty({required:true})
-    nombres:   string   
+    @ApiProperty({ example: 'Eiris' })
+    @IsString()
+    nombres: string;
 
-    @ApiProperty({required:true})
-    apellidos: string
+    @ApiProperty({ example: 'Salazar' })
+    @IsString()
+    apellidos: string;
 
-    @ApiProperty({required:true})
-    numeroDocumento: number
+    @ApiProperty({ example: 12345678 })
+    @IsNumber()
+    numeroDocumento: number;
 
-    @ApiProperty({required:false})
-    fechaNacimiento: Date
+    @ApiProperty({ required: false, example: '1990-10-13T00:00:00.000Z' })
+    @IsOptional()
+    @IsDateString() // Prisma espera un formato de fecha válido
+    fechaNacimiento?: Date;
+
+    @ApiProperty({ required: false, description: 'ID de la habitación si es el titular' })
+    @IsOptional()
+    @IsUUID() // Valida que sea un UUID válido de Prisma
+    habitacionResponsableId?: string;
+
+    @ApiProperty({ required: false, description: 'ID de la habitación si es acompañante' })
+    @IsOptional()
+    @IsUUID()
+    acompananteId?: string;
 }
