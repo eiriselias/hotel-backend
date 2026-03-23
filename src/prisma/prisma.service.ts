@@ -3,8 +3,18 @@ import { PrismaClient } from '@prisma/client';
 
 @Injectable()
 export class PrismaService extends PrismaClient implements OnModuleInit {
+  constructor() {
+    // Forzamos a que el cliente use la variable de entorno de Docker
+    super({
+      datasources: {
+        db: {
+          url: process.env.DATABASE_URL,
+        },
+      },
+    });
+  }
+
   async onModuleInit() {
-    // Conecta a la base de datos al iniciar el módulo
     await this.$connect();
   }
 }

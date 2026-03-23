@@ -4,14 +4,29 @@ services:
   db:
     image: postgres:15
     restart: always
+    container_name: hotel_db
     ports:
       - 5432:5432
     environment:
       POSTGRES_USER: uhotel
       POSTGRES_PASSWORD: secret123
       POSTGRES_DB: hotel_db
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U uhotel -d hotel_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
     volumes:
       - postgres_data:/var/lib/postgresql/data
+  app:
+    build: .
+    container_name: hotel_app
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: postgresql://uhotel:secret123@db:5432/hotel_db?schema=public
+    depends_on:
+      - db
 volumes:
   postgres_data:
     driver: local
