@@ -26,11 +26,14 @@ model Huesped {
 
   productos Producto[] @relation("productos")
 
-  habitacionResponsableId String?
-  habitacionResponsable Habitacion? @relation("responsable", fields: [habitacionResponsableId], references: [id] )
+  habitacionId String?
+  habitacion Habitacion? @relation("habitacionHuesped", fields: [habitacionId], references: [id] )
 
-  acompananteId String?
-  acompanante Habitacion? @relation("acompanantes", fields: [acompananteId], references: [id])
+  responsableId String?
+  responsable Huesped? @relation("huespedAcompanantes", fields: [responsableId], references: [id])
+
+  acompanantes Huesped[] @relation("huespedAcompanantes")
+  
 
 }
 
@@ -53,8 +56,8 @@ model Habitacion {
   jacuzzi Boolean
   aireAcondicionado Boolean
 
-  huespedResponsable Huesped[] @relation("responsable")
-  acompanantes Huesped[] @relation("acompanantes")
+  huespedes Huesped[] @relation("habitacionHuesped")
+
 }
 
 //---------------------------- PRODUCTO ---------------------

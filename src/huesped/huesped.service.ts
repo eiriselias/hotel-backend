@@ -11,10 +11,12 @@ export class HuespedService {
 
   async create(createHuespedDto: CreateHuespedDto) {
     try {
-      const {fechaNacimiento, ...data } = createHuespedDto
+      const {fechaNacimiento, habitacionId, responsableId, ...data } = createHuespedDto
       return await this.prisma.huesped.create({data:{
         ...data,
-        fechaNacimiento: fechaNacimiento ? new Date(fechaNacimiento) : null
+        fechaNacimiento: fechaNacimiento ? new Date(fechaNacimiento) : null,
+        habitacion: habitacionId ? {connect: {id: habitacionId}} : undefined,
+        responsable: responsableId ? {connect: {id: responsableId}} : undefined
       }});
     } catch (error) {
       this.handleDBErrors(error)
@@ -25,7 +27,8 @@ export class HuespedService {
     return await this.prisma.huesped.findMany({
       include:{
         productos:true,
-        habitacionResponsable: true
+        habitacion: true,
+        acompanantes: true
       }
     });
   }
@@ -34,7 +37,8 @@ export class HuespedService {
     
       const huesped = await this.prisma.huesped.findUnique({where:{id}, include:{
         productos:true,
-        habitacionResponsable: true
+        habitacion: true,
+        acompanantes: true
       }});
       if(!huesped) throw new NotFoundException(`el huesped con ID ${id} no fue encontrado`)
       return huesped
@@ -43,7 +47,26 @@ export class HuespedService {
 
   async update(id: string, updateHuespedDto: UpdateHuespedDto) {
     try {
-      return await this.prisma.huesped.update({where:{id}, data: updateHuespedDto})
+      const { habitacionId, responsableId, acompanantesIds, fechaNacimiento, ...data } = updateHuespedDto;
+
+    return await this.prisma.huesped.update({
+      where: { id },
+      data: {
+        ...data,
+        fechaNacimiento: fechaNacimiento ? new Date(fechaNacimiento) : undefined,
+        habitacion: habitacionId ? { connect: { id: habitacionId } } : undefined,
+        responsable: responsableId ? { connect: { id: responsableId } } : undefined,
+        acompanantes: acompanantesIds && acompanantesIds.length > 0 
+          ? {
+              connect: acompanantesIds.map(id => ({ id })) 
+            } 
+          : undefined
+      },
+      include: {
+        acompanantes: true, 
+        habitacion: true
+      }
+    });
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2025') {
         throw new NotFoundException(`No se puede actualizar: Huésped ${id} no existe`);

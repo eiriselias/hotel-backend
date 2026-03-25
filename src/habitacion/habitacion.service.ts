@@ -22,8 +22,7 @@ export class HabitacionService {
   async findAll() {
     return await this.prisma.habitacion.findMany({
       include:{
-        huespedResponsable: true,
-        acompanantes: true
+        huespedes: true
       }
     })
   }
@@ -31,8 +30,7 @@ export class HabitacionService {
   async findOne(id: string) {
    
     const habitacion =  await this.prisma.habitacion.findUnique({where:{id}, include:{
-      huespedResponsable:true,
-      acompanantes: true
+      huespedes: true
     }});
 
     if(!habitacion) throw new NotFoundException(`la habitacion con ID ${id} no fue encontrada`)

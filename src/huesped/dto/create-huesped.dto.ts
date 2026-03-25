@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsString, IsNumber, IsOptional, IsDateString, IsUUID } from "class-validator";
+import { IsString, IsNumber, IsOptional, IsDateString, IsUUID, IsArray } from "class-validator";
 
 export class CreateHuespedDto {
 
@@ -22,11 +22,17 @@ export class CreateHuespedDto {
 
     @ApiProperty({ required: false, description: 'ID de la habitación si es el titular' })
     @IsOptional()
-    @IsUUID() // Valida que sea un UUID válido de Prisma
-    habitacionResponsableId?: string;
+    @IsUUID()
+    habitacionId?: string;
 
-    @ApiProperty({ required: false, description: 'ID de la habitación si es acompañante' })
+    @ApiProperty({ required: false, description: 'ID del responsable si es el titular' })
     @IsOptional()
     @IsUUID()
-    acompananteId?: string;
+    responsableId?: string;
+
+    @ApiProperty({ required: false})
+    @IsOptional()
+    @IsArray()
+    @IsUUID("4", { each: true })
+    acompanantesIds?: string[];
 }
