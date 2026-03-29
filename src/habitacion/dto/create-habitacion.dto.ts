@@ -1,6 +1,6 @@
 import { Tipo } from "@prisma/client"
 import { ApiProperty } from "@nestjs/swagger";
-import { IsEnum, IsNumber, IsOptional, IsUUID, IsBoolean } from "class-validator";
+import { IsEnum, IsNumber, IsOptional, IsUUID, IsBoolean, IsString, IsArray } from "class-validator";
 
 export class CreateHabitacionDto {
 
@@ -37,4 +37,14 @@ export class CreateHabitacionDto {
     @ApiProperty({ example: true })
     @IsBoolean()
     aireAcondicionado: boolean
+
+    @ApiProperty({
+      example:["https://i.pinimg.com/736x/15/a6/56/15a6569a481c9aad60cd0925b278ffb1.jpg"],
+      description:"Lista de URLs de las imagenes de la habitacion",
+      type:[String]
+    })
+    @IsOptional()
+    @IsArray({message:"imagenes deben ser un arreglo de strings"})
+    @IsString({each:true, message:"Cada imagen debe ser un string valido"})
+    imagenes?: string[]
 }

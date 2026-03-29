@@ -1,5 +1,5 @@
 import { Categoria } from "@prisma/client"
-import { IsString, IsNumber, IsOptional, IsUUID, IsEnum } from "class-validator";
+import { IsString, IsNumber, IsOptional, IsUUID, IsEnum, isString } from "class-validator";
 import { ApiProperty } from "@nestjs/swagger";
 
 export class CreateProductoDto {
@@ -29,6 +29,11 @@ export class CreateProductoDto {
     @ApiProperty({ example: 30 })
     @IsNumber()
     existencia: number
+    
+    @ApiProperty({example: "https://png.pngtree.com/png-clipart/20240928/original/pngtree-supermarket-shopping-cart-shopping-trolley-full-of-food-png-image_16113400.png"})
+    @IsString()
+    @IsOptional()
+    imagen?: string
 
     @ApiProperty({ example: 2 })
     @IsOptional()

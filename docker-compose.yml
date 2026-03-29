@@ -23,6 +23,9 @@ services:
     container_name: hotel_app
     ports:
       - "3000:3000"
+    volumes:
+      - .:/usr/src/app         
+      - /usr/src/app/node_modules
     environment:
       DATABASE_URL: postgresql://uhotel:secret123@db:5432/hotel_db?schema=public
     depends_on:

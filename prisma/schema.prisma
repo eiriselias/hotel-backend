@@ -55,6 +55,7 @@ model Habitacion {
   ocupado Boolean
   jacuzzi Boolean
   aireAcondicionado Boolean
+  imagenes String[]
 
   huespedes Huesped[] @relation("habitacionHuesped")
 
@@ -76,6 +77,7 @@ model Producto {
   precio Int
   existencia Int
   cantidadSolicitada Int?
+  imagen String?
 
   huespedId String?
   huesped Huesped? @relation("productos", fields: [huespedId], references: [id])

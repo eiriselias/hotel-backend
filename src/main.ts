@@ -6,11 +6,17 @@ import { ValidationPipe } from '@nestjs/common';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  app.enableCors({
+    origin: 'http://localhost:4000',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    credentials: true,
+  });
+
   app.useGlobalPipes(
     new ValidationPipe({
-      whitelist: true,            // Remueve propiedades que no estén en el DTO
-      forbidNonWhitelisted: true, // Lanza error si envían datos extra que no pertenecen al DTO
-      transform: true,            // Convierte automáticamente los tipos (ej: string a number en el ID)
+      whitelist: true,           
+      forbidNonWhitelisted: true, 
+      transform: true,            
     }),
   );
 
